@@ -1,25 +1,21 @@
-name: JS Actions
+name: Node.js CI
 
 on:
-  pull_request:
-    types: [labeled]
+  push:
+    branches: [ main ]
 
 jobs:
-  action:
+  linux:
+    name: Linux
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v1
-
-      - name: hello-action
-        uses: ./.github/actions/hello-world
-
-      - name: ha-ha
-        uses: ./.github/actions/joke-action
-        id: jokes
-
-      - name: create-issue
-        uses: ./.github/actions/issue-maker
-        with:
-          repo-token: ${{secrets.GITHUB_TOKEN}}
-          joke: ${{steps.jokes.outputs.joke-output}}
+    - uses: actions/checkout@v2
+  	- name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+       node-version: 12
+        
+    - name: Install Node.js modules
+      run: npm install
+    - name: Create build
+      run: npm run build
